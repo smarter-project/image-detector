@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian:stretch-slim
 
 # TODO (grebre01): reduce size of container by adding:
 #    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
