@@ -8,7 +8,6 @@ FROM debian:stretch-slim
 # TODO (grebre01): check if pip package "opencv-contrib-python-headless" is somehow better
 
 RUN apt-get update && \
-    dpkg --add-architecture armhf && \
     apt-get install -yqq --no-install-recommends ca-certificates netbase curl python3-dev \
     libhdf5-dev libfreetype6-dev libharfbuzz-dev libatlas3-base libwebp5 libtiff5 libjasper1 \
     libilmbase6 libopenexr6 libgstreamer1.0-0 libavcodec56 libavformat56 libswscale3 libqtgui4 libqt4-test && \
