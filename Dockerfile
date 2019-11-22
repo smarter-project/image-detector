@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 # TODO (grebre01): reduce size of container by adding:
 #    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
@@ -8,20 +8,11 @@ FROM debian:stretch-slim
 # TODO (grebre01): check if pip package "opencv-contrib-python-headless" is somehow better
 
 RUN apt-get update && \
-    apt-get install -yqq --no-install-recommends ca-certificates netbase curl python3-dev \
-    libhdf5-dev libfreetype6-dev libharfbuzz-dev libatlas3-base libwebp5 libtiff5 libjasper1 \
-    libilmbase6 libopenexr6 libgstreamer1.0-0 libavcodec56 libavformat56 libswscale3 libqtgui4 libqt4-test && \
+    apt-get install -yqq --no-install-recommends ca-certificates \
+    libhdf5-dev python3-dev python3-opencv python3-paho-mqtt python3-numpy && \
     rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt ./
-
-RUN curl -LO https://bootstrap.pypa.io/get-pip.py && \
-    python3 get-pip.py && \
-    echo "[global]\nextra-index-url=https://www.piwheels.org/simple" > /etc/pip.conf && \
-    rm get-pip.py && \
-    pip3 install --no-cache-dir -r requirements.txt
 
 COPY *.py test.png ./
 COPY models/ssd_mobilenet_coco.* ./models/
 
-ENTRYPOINT [ "python3", "demo.py", "-d 1", "-s 5" ]
+CMD [ "python3", "./car_person.py", "test.png" ]
