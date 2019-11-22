@@ -1,0 +1,4 @@
+env
+qemu-arm-static*
+*.tar
+*.tar.*
