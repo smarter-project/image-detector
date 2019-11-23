@@ -10,6 +10,8 @@ from car_person import read_model, read_classes
 from car_person import img2blob, detect, log_it
 from car_person import annotate
 
+# Set env variables
+MQTT_BROKER_HOST = os.getenv('MQTT_BROKER_HOST', 'fluent-bit')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-d', '--devno', type=int, default=0, help='device number for camera (typically 0=internal, 1=external)')
@@ -41,7 +43,7 @@ def getframe(devno=0):
 client = None
 if args.publish:
   client = mqtt.Client()
-  client.connect("fluentbit-mqtt", 1883, 60)
+  client.connect(MQTT_BROKER_HOST, 1883, 60)
   client.loop_start()
 
 model = read_model('models/ssd_mobilenet_coco.pb', 'models/ssd_mobilenet_coco.pbtxt')

@@ -11,6 +11,9 @@ from datetime import datetime
 import cv2
 import os
 
+# Set env variables
+MQTT_BROKER_HOST = os.getenv('MQTT_BROKER_HOST', 'fluent-bit')
+TOPIC = os.getenv('TOPIC', '/demo')
 
 def read_model(pb_path, pbtxt_path):
   model = cv2.dnn.readNetFromTensorflow(pb_path, pbtxt_path)
@@ -61,7 +64,7 @@ def detect(img_blob, model, classes, confidence=0.3, img_rows=1, img_cols=1):
   return output
 
 
-def log_it(client,sensor, label, value):
+def log_it(client, sensor, label, value):
   # print something vaguely resembling waggle logs
   # timestamp,node_id,subsystem,sensor,parameter,label,value
   timestamp = '"timestamp":"'+datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')+'"'
@@ -73,7 +76,7 @@ def log_it(client,sensor, label, value):
   mystr = '{'+','.join(map(str, mylist))+'}'
   print(mystr)
   if client:
-    client.publish("/demo/"+label,mystr)
+    client.publish("{}/{}".format(TOPIC, label), mystr)
 
 
 def annotate(img, bbox, color, thickness=2):
@@ -94,7 +97,7 @@ if __name__ == '__main__':
   client = None
   if args.publish:
     client = mqtt.Client()
-    client.connect("fluentbit-mqtt", 1883, 60)
+    client.connect(MQTT_BROKER_HOST, 1883, 60)
     client.loop_start()
 
   model = read_model('models/ssd_mobilenet_coco.pb', 'models/ssd_mobilenet_coco.pbtxt')

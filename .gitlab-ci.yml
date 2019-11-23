@@ -39,7 +39,7 @@ build:buildx-master:
     - docker buildx create --driver docker-container --use
     - docker buildx inspect --bootstrap
     - docker buildx ls
-    - docker buildx build --platform $CI_BUILDX_ARCHS --progress plain --pull -t "$CI_REGISTRY_IMAGE" --push .
+    - docker buildx build --platform $CI_BUILDX_ARCHS --progress plain --pull -t "$CI_REGISTRY_IMAGE" --push --cache-from $CI_REGISTRY_IMAGE .
 
 build:buildx:
   extends: .build
