@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 # TODO (grebre01): reduce size of container by adding:
 #    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
