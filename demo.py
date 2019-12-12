@@ -14,7 +14,7 @@ from car_person import annotate
 MQTT_BROKER_HOST = os.getenv('MQTT_BROKER_HOST', 'fluent-bit')
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', '--devno', type=int, default=0, help='device number for camera (typically 0=internal, 1=external)')
+parser.add_argument('-d', '--devno', type=int, default=-1, help='device number for camera (typically -1=find first available, 0=internal, 1=external)')
 parser.add_argument('-c', '--confidence', type=float, default=0.3)
 parser.add_argument('-o', '--outfile', type=str, default=None, help='publish annotated images to outfile')
 parser.add_argument('-p', '--publish', type=int, default=1, help='publish log to MQTT')
@@ -27,6 +27,13 @@ parser.add_argument('-db4', '--detect_bicycle', action="store_true")
 parser.add_argument('-db5', '--detect_motorcycle', action="store_true")
 args = parser.parse_args()
 
+if args.devno < 0:
+  video_entries = [entry for entry in os.listdir("/dev") if entry.startswith("video") ]
+  if len(video_entries) == 0:
+    print('No cameras available')
+    exit(0)
+  args.devno = video_entries[0][len("video"):]
+  print("Using entry " + args.devno)
 
 def getframe(devno=0):
   cam = cv2.VideoCapture(devno)
