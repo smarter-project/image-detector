@@ -1,0 +1,19 @@
+FROM nvcr.io/nvidia/l4t-base:r32.3.1
+
+COPY opencv4_4.2.0-1_arm64.deb /opencv4_4.2.0-1_arm64.deb
+RUN apt update -yqq && \
+    apt-get install -yqq --no-install-recommends ca-certificates \
+        libhdf5-dev python3-dev build-essential && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
+    python3 get-pip.py && \
+    rm get-pip.py && \
+    pip3 install --install-option="--jobs=$(getconf _NPROCESSORS_ONLN)" numpy && \
+    pip3 install paho-mqtt && \
+    apt install --no-install-recommends -yqq ./opencv4_4.2.0-1_arm64.deb && \
+    apt remove --purge -yqq build-essential && \
+    apt autoremove -yqq
+COPY *.py test.png ./
+COPY models/ssd_mobilenet_coco.* ./models/
+
+CMD [ "python3", "demo.py", "-o", "/www/images/image.png", "--devno", "0", "-s", "2", "--detect_car" ]
+
