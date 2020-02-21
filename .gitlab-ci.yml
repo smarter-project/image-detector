@@ -41,6 +41,21 @@ build:buildx-master:
     - docker buildx ls
     - docker buildx build --platform $CI_BUILDX_ARCHS --progress plain --pull -t "$CI_REGISTRY_IMAGE" --push --cache-from $CI_REGISTRY_IMAGE .
 
+build:buildx-master-xavier:
+  extends: .build
+  only: 
+    refs:
+      - master
+    variables:
+      - $CI_BUILDX_ARCHS
+  script:
+    # Use docker-container driver to allow useful features (push/multi-platform)
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+    - docker buildx create --driver docker-container --use
+    - docker buildx inspect --bootstrap
+    - docker buildx ls
+    - docker buildx build --platform linux/arm64 --progress plain --pull -t "${CI_REGISTRY_IMAGE}_xavier" --push --cache-from ${CI_REGISTRY_IMAGE}_xavier .
+
 build:buildx:
   extends: .build
   only:
@@ -55,3 +70,18 @@ build:buildx:
     - docker buildx inspect --bootstrap
     - docker buildx ls
     - docker buildx build --platform $CI_BUILDX_ARCHS --progress plain --pull -t "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" --push .
+
+build:buildx-xavier:
+  extends: .build
+  only:
+    variables:
+      - $CI_BUILDX_ARCHS
+  except:
+    refs:
+       - master
+  script:
+    - update-binfmts --enable # Important: Ensures execution of other binary formats is enabled in the kernel
+    - docker buildx create --driver docker-container --use
+    - docker buildx inspect --bootstrap
+    - docker buildx ls
+    - docker buildx build -f Dockerfile-xavier --platform linux/arm64 --progress plain --pull -t "$CI_APPLICATION_REPOSITORY:${CI_APPLICATION_TAG}_xavier" --push .

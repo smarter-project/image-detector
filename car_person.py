@@ -17,6 +17,8 @@ TOPIC = os.getenv('TOPIC', '/demo')
 
 def read_model(pb_path, pbtxt_path):
   model = cv2.dnn.readNetFromTensorflow(pb_path, pbtxt_path)
+  model.setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+  model.setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
   return model
 
 
