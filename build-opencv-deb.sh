@@ -13,7 +13,7 @@ sudo apt-get install libavcodec-dev libavformat-dev libswscale-dev
 sudo apt-get install libv4l-dev libxvidcore-dev libx264-dev
 sudo apt-get install libgtk-3-dev
 sudo apt-get install libatlas-base-dev gfortran
-sudo apt-get install python3-dev
+sudo apt-get install python3-dev python3-numpy python3-py python3-pytest
 			
 # Make a new directory
 find $CURR_DIR/opencv-build ! -name "*.zip" -exec rm -r {} \ || true
@@ -55,11 +55,12 @@ cmake -D CMAKE_BUILD_TYPE=RELEASE \
 	-D OPENCV_DNN_CUDA=ON \
 	-D ENABLE_FAST_MATH=1 \
 	-D CUDA_FAST_MATH=1 \
-	-D CUDA_ARCH_BIN=7.2 \
+	-D CUDA_ARCH_BIN=5.3 \
 	-D WITH_CUBLAS=1 \
 	-D OPENCV_EXTRA_MODULES_PATH=$CURR_DIR/opencv-build/opencv_contrib-${VERSION}/modules \
 	-D HAVE_opencv_python3=ON \
-	-D PYTHON_EXECUTABLE=/usr/bin/python3 \
+	-D BUILD_opencv_python3=ON \
+	-D PYTHON_EXECUTABLE=/usr/bin/python3.6 \
 	-D BUILD_EXAMPLES=OFF ..
 
 make -j8
