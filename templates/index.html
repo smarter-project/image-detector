@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Demo: Annotated Image</title>
+ <style type="text/css">
+
+  #carbox, #personbox {
+    position: relative;
+    display: inline-block;
+  }
+
+  #carbox {
+    padding: 10px ;
+    border: 3px solid #00ff02 ;
+    width: 30px;
+  }
+  #personbox {
+    padding: 10px ;
+    border: 3px solid #fe0100 ;
+    width: 50px;
+  }
+  </style>
+</head>
+<body>
+    <div id="imagedata">
+    <img id="myImage" src="{{ url_for('video_feed') }}"/>
+    </div>
+       <div id="carbox">
+       Car
+    </div>
+    <div id="personbox">
+      Person
+    </div>
+</body>
+</html>
