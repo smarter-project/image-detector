@@ -15,12 +15,14 @@ RUN apt update && apt install -yqq --no-install-recommends \
         python3-grpcio \
         libhdf5-dev \
         python3-opencv \
+        python3-flask \
         python3-paho-mqtt && \
     rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install --upgrade wheel setuptools clients/python/tensorrtserver-*.whl
 
-COPY *.py test.png *.classes ./
+COPY *.py *.classes ./
+COPY templates /templates
 
 CMD [ "bash" ]
 
