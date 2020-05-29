@@ -51,6 +51,6 @@ RUN apt-get update && \
     libhdf5-dev python3-opencv python3-paho-mqtt && \
     rm -rf /var/lib/apt/lists/*
 
-COPY *.py test.png *.classes ./
+COPY *.py *.classes ./
 
 CMD [ "bash" ]
