@@ -41,16 +41,16 @@ RUN cd triton-inference-server/build && \
 RUN pip3 install --upgrade  \
             install/python/tensorrtserver*.whl \
             install/python/triton*.whl \
-            numpy pillow
+            numpy
 
 ENV PATH //workspace/install/bin:${PATH}
 ENV LD_LIBRARY_PATH /workspace/install/lib:${LD_LIBRARY_PATH}
 
 RUN apt-get update && \
     apt-get install -yqq --no-install-recommends ca-certificates \
-    libhdf5-dev python3-opencv python3-paho-mqtt && \
+    libhdf5-dev python3-opencv python3-paho-mqtt python3-flask && \
     rm -rf /var/lib/apt/lists/*
 
-COPY *.py test.png *.classes ./
+COPY *.py *.classes ./
 
 CMD [ "bash" ]
