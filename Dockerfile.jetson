@@ -1,0 +1,27 @@
+FROM debian:sid-20200514-slim
+
+# Ensure apt won't prompt for selecting options
+ENV DEBIAN_FRONTEND=noninteractive
+
+COPY clients/python /clients/python
+
+RUN apt update && apt install -yqq --no-install-recommends \
+        curl \
+        python3-pip \
+        python3-dev \
+        pkg-config \
+        python3-numpy \
+        python3-pillow \
+        python3-grpcio \
+        libhdf5-dev \
+        python3-opencv \
+        python3-paho-mqtt && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install --upgrade wheel setuptools clients/python/tensorrtserver-*.whl
+
+COPY *.py test.png *.classes ./
+
+CMD [ "bash" ]
+
+
