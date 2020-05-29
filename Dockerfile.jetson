@@ -11,7 +11,6 @@ RUN apt update && apt install -yqq --no-install-recommends \
         python3-dev \
         pkg-config \
         python3-numpy \
-        python3-pillow \
         python3-grpcio \
         libhdf5-dev \
         python3-opencv \
