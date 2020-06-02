@@ -29,7 +29,6 @@ import argparse
 import numpy as np
 import os
 from builtins import range
-from PIL import Image
 from functools import partial
 from tensorrtserver.api import *
 import tensorrtserver.api.model_config_pb2 as model_config
