@@ -24,6 +24,7 @@ parser.add_argument("-i", "--ip", type=str, required=False, default=os.getenv('L
 parser.add_argument("--port", type=int, required=False, default=os.getenv('LISTEN_PORT', '8080'),
 		                help="ephemeral port number of the server (1024 to 65535) default 8080")
 parser.add_argument('-d', '--devno', type=int, default=os.getenv('DEVNO', '-1'), help='device number for camera (typically -1=find first available, 0=internal, 1=external)')
+parser.add_argument('-n', '--network_cam', type=str, default=os.getenv('NETWORK_CAM_STRING'), help='IP camera connection string')
 parser.add_argument('-c', '--confidence', type=float, default=os.getenv('CONFIDENCE', '0.3'))
 parser.add_argument('-p', '--publish', type=int, default=os.getenv('PUBLISH', '1'), help='publish log to MQTT')
 parser.add_argument('-s', '--sleep', type=float, default=os.getenv('SLEEP', '1.0'))
@@ -34,7 +35,8 @@ parser.add_argument('-m', '--model-name', type=str, required=False, default=os.g
 parser.add_argument('-x', '--model-version', type=int, required=False,
                     help='Version of model. Default is to use latest version.')
 parser.add_argument('-u', '--url', type=str, required=False, default=os.getenv('TRITON_URL', 'localhost:8000'),
-                    help='Inference server URL. Default is localhost:8000.')                
+                    help='Inference server URL. Default is localhost:8000.')
+parser.add_argument('--ip_camera', action="store_true")                
 parser.add_argument('-db1', '--detect_car', action="store_true")
 parser.add_argument('-db2', '--detect_person', action="store_true")
 parser.add_argument('-db3', '--detect_bus', action="store_true")
@@ -64,19 +66,28 @@ def video_feed():
 	return Response(generate(),
 		mimetype = "multipart/x-mixed-replace; boundary=frame")
 
-def getframe(devno=0):
-  cam = cv2.VideoCapture(devno)
+def getframe():
+  if args.network_cam:
+    cam = cv2.VideoCapture(args.network_cam)
+    if (cam.isOpened()== False):
+      print("Error opening video stream ",args.network-cam)
+      exit(1)
+  else:
+    cam = cv2.VideoCapture(args.devno)
+    if (cam.isOpened()== False):
+      print("Error opening camera: ",args.devno)
+      exit(1)
   img_counter = 0
   while True:
     ret, frame = cam.read()
     if not ret:
-      print('No camera on', devno)
+      print('No camera found')
       exit(0)
     yield frame
   cam.release()
 
 def detection_loop():
-  for img in getframe(args.devno):
+  for img in getframe():
     img_rows = img.shape[0]
     img_cols = img.shape[1]
     detected_objects = detect(img, ctx, input_name, output_names, classes, h, w, img_rows, img_cols, args.confidence)
@@ -185,13 +196,14 @@ def post_process(img, args, detected_objects, client):
 
 if __name__ == '__main__':
   # If not using test images, open up camera
-  if args.devno < 0 and not args.images:
-    video_entries = [entry for entry in os.listdir("/dev") if entry.startswith("video") ]
-    if len(video_entries) == 0:
-      print('No cameras available')
-      exit(0)
-    args.devno = video_entries[0][len("video"):]
-    print("Using entry " + args.devno)
+  if not args.network_cam and not args.images :
+    if args.devno < 0:
+      video_entries = [entry for entry in os.listdir("/dev") if entry.startswith("video") ]
+      if len(video_entries) == 0:
+        print('No cameras available')
+        exit(0)
+      args.devno = video_entries[0][len("video"):]
+      print("Using entry " + args.devno)
 
   # Register MQTT client
   client = None
