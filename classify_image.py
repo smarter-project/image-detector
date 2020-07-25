@@ -72,20 +72,23 @@ def infer_image(
     img_cols = imgorig.shape[1]
     resized = cv2.resize(imgorig, (300, 300))
     converted = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
-    
+
     if armnn:
-      converted = ((np.asarray(converted)/255.0) * 2.0) - 1  # normalize values
-      converted = np.expand_dims(converted, axis=0)
+        converted = ((np.asarray(converted)/255.0) * 2.0) - \
+            1  # normalize values
+        converted = np.expand_dims(converted, axis=0)
 
     # create input
-    request_input = clientclass.InferInput(
-        input_name, [1, 300, 300, 3], "FP32")
     if armnn:
+        request_input = clientclass.InferInput(
+        input_name, [1, 300, 300, 3], "FP32")
         request_input.set_data_from_numpy(
             converted.astype(np.float32))
     else:
+        request_input = clientclass.InferInput(
+        input_name, [1, 300, 300, 3], "UINT8")
         request_input.set_data_from_numpy(
-            converted)
+            np.expand_dims(converted, axis=0))
 
     # create output
     detection_boxes_request = clientclass.InferRequestedOutput(
@@ -113,7 +116,8 @@ def infer_image(
 
             # For some reason after converting ssd_mobilenet_v1 to tflite and then armnn the detection classes
             # shift by one
-            detection_class = classes[detection_class_idx + 1] if armnn else classes[detection_class_idx]
+            detection_class = classes[detection_class_idx +
+                                      1] if armnn else classes[detection_class_idx]
             if detection_class not in detected_objects:
                 detected_objects[detection_class] = {}
             detection_index = len(detected_objects[detection_class].keys())
