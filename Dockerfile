@@ -1,7 +1,7 @@
 FROM registry.gitlab.com/arm-research/smarter/jetpack-triton:arm64_client_base as base
 
 
-FROM debian:sid-20200514-slim
+FROM debian:bullseye-20200720-slim
 
 # Ensure apt won't prompt for selecting options
 ENV DEBIAN_FRONTEND=noninteractive
@@ -25,6 +25,7 @@ RUN apt update && apt install -yqq --no-install-recommends \
 	libssl-dev \
         python3-paho-mqtt && \
     rm -rf /var/lib/apt/lists/*
+
 RUN python3 -m pip install --upgrade \
         wheel \
         setuptools \

@@ -21,21 +21,26 @@ MQTT_BROKER_HOST = os.getenv('MQTT_BROKER_HOST', 'fluent-bit')
 TOPIC = os.getenv('TOPIC', '/demo')
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-f", "--flask", action="store_true", help="enable flask app")
-parser.add_argument('-v', '--verbose', action="store_true", required=False, default=False, help='Enable verbose output')
+parser.add_argument("-f", "--flask", action="store_true",
+                    help="enable flask app")
+parser.add_argument('-v', '--verbose', action="store_true",
+                    required=False, default=False, help='Enable verbose output')
 parser.add_argument("-i", "--ip", type=str, required=False, default=os.getenv('LISTEN_IP', '0.0.0.0'),
                     help="listen ip address")
 parser.add_argument("--port", type=int, required=False, default=os.getenv('LISTEN_PORT', '8080'),
                     help="ephemeral port number of the server (1024 to 65535) default 8080")
 parser.add_argument('-d', '--devno', type=int, default=os.getenv('DEVNO', '-1'),
-                    help='device number for camera (typically -1=find first available, 0=internal, 1=external)')
-parser.add_argument(
-    '-n', '--network_cam', type=str, default=os.getenv('NETWORK_CAM_STRING'),
-    help='IP camera connection string')
-parser.add_argument('-c', '--confidence', type=float, default=os.getenv('CONFIDENCE', '0.3'))
-parser.add_argument('-p', '--publish', type=int, default=os.getenv('PUBLISH', '1'), help='publish log to MQTT')
-parser.add_argument('-s', '--sleep', type=float, default=os.getenv('SLEEP', '1.0'))
-parser.add_argument('--protocol', type=str, default=os.getenv('PROTOCOL', 'HTTP'))
+                     help='device number for camera (typically -1=find first available, 0=internal, 1=external)')
+parser.add_argument('-n', '--network_cam', type=str, default=os.getenv('NETWORK_CAM_STRING'),
+                    help='IP camera connection string or RTSP connection string')
+parser.add_argument('-c', '--confidence', type=float,
+                    default=os.getenv('CONFIDENCE', '0.3'))
+parser.add_argument('-p', '--publish', type=int,
+                    default=os.getenv('PUBLISH', '1'), help='publish log to MQTT')
+parser.add_argument('-s', '--sleep', type=float,
+                    default=os.getenv('SLEEP', '1.0'))
+parser.add_argument('--protocol', type=str,
+                    default=os.getenv('PROTOCOL', 'HTTP'))
 parser.add_argument('--images', nargs='*')
 parser.add_argument('-m', '--model-name', type=str, required=False,
                     default=os.getenv('MODEL_NAME', 'ssd_mobilenet_coco'), help='Name of model')
@@ -62,8 +67,6 @@ lock = threading.Lock()
 app = Flask(__name__)
 
 # Flask routes
-
-
 @app.route("/")
 def index():
     # return the rendered template
@@ -81,15 +84,11 @@ def video_feed():
 def getframe():
     if args.network_cam:
         cam = cv2.VideoCapture(args.network_cam)
-        if (cam.isOpened() == False):
-            print("Error opening video stream ", args.network-cam)
-            exit(1)
     else:
         cam = cv2.VideoCapture(args.devno)
-        if (cam.isOpened() == False):
-            print("Error opening camera: ", args.devno)
-            exit(1)
-    img_counter = 0
+    if (cam.isOpened() == False):
+        print("Error opening video stream ", args.network_cam)
+        exit(1)
     while True:
         ret, frame = cam.read()
         if not ret:
@@ -150,7 +149,8 @@ def log_it(sensor, label, value):
 
 
 def annotate(img, bbox, color, thickness=2):
-    cv2.rectangle(img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), color, thickness)
+    cv2.rectangle(img, (bbox[0], bbox[1]),
+                  (bbox[2], bbox[3]), color, thickness)
 
 
 def post_process(img, detected_objects):
@@ -215,7 +215,8 @@ if __name__ == '__main__':
     # If not using test images, open up camera
     if not args.network_cam and not args.images:
         if args.devno < 0:
-            video_entries = [entry for entry in os.listdir("/dev") if entry.startswith("video")]
+            video_entries = [entry for entry in os.listdir(
+                "/dev") if entry.startswith("video")]
             if len(video_entries) == 0:
                 print('No cameras available')
                 exit(0)
@@ -257,10 +258,12 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if args.protocol.lower() == "grpc":
-        input_name, output_names = validate_model_grpc(model_metadata, model_config.config)
+        input_name, output_names = validate_model_grpc(
+            model_metadata, model_config.config)
         tritonclass = tritongrpcclient
     else:
-        input_name, output_names = validate_model_http(model_metadata, model_config)
+        input_name, output_names = validate_model_http(
+            model_metadata, model_config)
         tritonclass = tritonhttpclient
 
     # Read from camera and serve flask app
