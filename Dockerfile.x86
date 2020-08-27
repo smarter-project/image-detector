@@ -1,0 +1,18 @@
+FROM nvcr.io/nvidia/tritonserver:20.08-py3-clientsdk
+
+RUN apt update && apt install -yqq --no-install-recommends \
+        curl \
+        build-essential \
+        pkg-config \
+        libhdf5-dev \
+        python3-opencv \
+        python3-flask \
+	libffi-dev \
+	libssl-dev \
+        python3-paho-mqtt && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY *.py *.classes demo.mp4 ./
+COPY templates /templates
+
+CMD [ "bash" ]
