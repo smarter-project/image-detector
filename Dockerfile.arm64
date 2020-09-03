@@ -1,7 +1,7 @@
 FROM registry.gitlab.com/arm-research/smarter/jetpack-triton:arm64_client_base as base
 
 
-FROM debian:bullseye-20200720-slim
+FROM debian:buster-20200803-slim
 
 # Ensure apt won't prompt for selecting options
 ENV DEBIAN_FRONTEND=noninteractive
@@ -10,7 +10,9 @@ COPY --from=base /workspace/install/python/tritonhttpclient-2.1.0.dev0-py3-none-
 COPY --from=base /workspace/install/python/tritongrpcclient-2.1.0.dev0-py3-none-any.whl tritongrpcclient-2.1.0.dev0-py3-none-any.whl
 COPY --from=base /workspace/install/python/tritonclientutils-2.1.0.dev0-py3-none-any.whl tritonclientutils-2.1.0.dev0-py3-none-any.whl
 
-RUN apt update && apt install -yqq --no-install-recommends \
+RUN apt update && apt install -yqq wget && \
+    wget https://gitlab.com/arm-research/smarter/smarter-opencv/-/jobs/718927148/artifacts/raw/master/arm64/extract/opencv4_4.4.0-1_arm64.deb && \
+    apt install -yqq --no-install-recommends \
         curl \
         python3-pip \
         python3-dev \
@@ -19,7 +21,7 @@ RUN apt update && apt install -yqq --no-install-recommends \
         python3-numpy \
         python3-grpcio \
         libhdf5-dev \
-        python3-opencv \
+        ./opencv4_4.4.0-1_arm64.deb \
         python3-flask \
 	libffi-dev \
 	libssl-dev \
@@ -28,7 +30,8 @@ RUN apt update && apt install -yqq --no-install-recommends \
 
 RUN python3 -m pip install --upgrade \
         wheel \
-        setuptools \
+        setuptools && \
+    python3 -m pip install --upgrade \
         tritonhttpclient-2.1.0.dev0-py3-none-any.whl \
         tritongrpcclient-2.1.0.dev0-py3-none-any.whl \
         tritonclientutils-2.1.0.dev0-py3-none-any.whl

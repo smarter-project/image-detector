@@ -37,7 +37,7 @@ build:buildx-master-arm64:
     - docker buildx create --driver docker-container --use
     - docker buildx inspect --bootstrap
     - docker buildx ls
-    - docker buildx build -f Dockerfile.arm64 --progress plain --pull -t ${CI_REGISTRY_IMAGE}-arm64 --push .
+    - docker buildx build --platform linux/arm64 -f Dockerfile.arm64 --progress plain --pull -t ${CI_REGISTRY_IMAGE}-arm64 --push .
 
 build:buildx-master-x86:
   extends: .build
@@ -50,7 +50,7 @@ build:buildx-master-x86:
     - docker buildx create --driver docker-container --use
     - docker buildx inspect --bootstrap
     - docker buildx ls
-    - docker buildx build -f Dockerfile.x86 --progress plain --pull -t ${CI_REGISTRY_IMAGE}-x86 --push .
+    - docker buildx build --platform linux/amd64 -f Dockerfile.x86 --progress plain --pull -t ${CI_REGISTRY_IMAGE}-x86 --push .
 
 build:buildx-arm64:
   extends: .build
@@ -62,7 +62,7 @@ build:buildx-arm64:
     - docker buildx create --driver docker-container --use
     - docker buildx inspect --bootstrap
     - docker buildx ls
-    - docker buildx build -f Dockerfile.arm64 --progress plain --pull -t ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}-arm64 --push .
+    - docker buildx build --platform linux/arm64 -f Dockerfile.arm64 --progress plain --pull -t ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}-arm64 --push .
 
 build:buildx-x86:
   extends: .build
@@ -74,4 +74,4 @@ build:buildx-x86:
     - docker buildx create --driver docker-container --use
     - docker buildx inspect --bootstrap
     - docker buildx ls
-    - docker buildx build -f Dockerfile.x86 --progress plain --pull -t ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}-x86 --push .
+    - docker buildx build --platform linux/amd64 -f Dockerfile.x86 --progress plain --pull -t ${CI_APPLICATION_REPOSITORY}:${CI_APPLICATION_TAG}-x86 --push .
