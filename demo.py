@@ -31,8 +31,8 @@ parser.add_argument("--port", type=int, required=False, default=os.getenv('LISTE
                     help="ephemeral port number of the server (1024 to 65535) default 8080")
 parser.add_argument('-d', '--devno', type=int, default=os.getenv('DEVNO', '-1'),
                      help='device number for camera (typically -1=find first available, 0=internal, 1=external)')
-parser.add_argument('-n', '--network_cam', type=str, default=os.getenv('NETWORK_CAM_STRING'),
-                    help='IP camera connection string or RTSP connection string')
+parser.add_argument('-n', '--capture_string', type=str, default=os.getenv('CAPTURE_STRING'),
+                    help='Any valid VideoCapture string(IP camera connection, RTSP connection string, etc')
 parser.add_argument('-c', '--confidence', type=float,
                     default=os.getenv('CONFIDENCE', '0.3'))
 parser.add_argument('-p', '--publish', type=int,
@@ -82,12 +82,12 @@ def video_feed():
 
 
 def getframe():
-    if args.network_cam:
-        cam = cv2.VideoCapture(args.network_cam)
+    if args.capture_string:
+        cam = cv2.VideoCapture(args.capture_string)
     else:
         cam = cv2.VideoCapture(args.devno)
     if (cam.isOpened() == False):
-        print("Error opening video stream ", args.network_cam)
+        print("Error opening video stream ", args.capture_string)
         exit(1)
     while True:
         ret, frame = cam.read()
@@ -213,7 +213,7 @@ def post_process(img, detected_objects):
 
 if __name__ == '__main__':
     # If not using test images, open up camera
-    if not args.network_cam and not args.images:
+    if not args.capture_string and not args.images:
         if args.devno < 0:
             video_entries = [entry for entry in os.listdir(
                 "/dev") if entry.startswith("video")]
