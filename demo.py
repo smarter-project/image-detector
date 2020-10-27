@@ -88,24 +88,28 @@ def getframe():
         cam = cv2.VideoCapture(args.devno)
     if (cam.isOpened() == False):
         print("Error opening video stream ", args.capture_string)
-        exit(1)
+        os._exit(1)
     while True:
         ret, frame = cam.read()
         if not ret:
             print('No camera found')
-            exit(0)
+            os._exit(1)
         yield frame
     cam.release()
 
 
 def detection_loop():
-    for img in getframe():
-        detected_objects = infer_image(tritonclass, triton_client, args.model_name, args.model_version,
-                                       input_name, output_names, img, args.confidence, classes, armnn=args.armnn)
-        post_process(img, detected_objects)
+    try:
+        for img in getframe():
+            detected_objects = infer_image(tritonclass, triton_client, args.model_name, args.model_version,
+                                        input_name, output_names, img, args.confidence, classes, armnn=args.armnn)
+            post_process(img, detected_objects)
 
-        if args.sleep:
-            time.sleep(args.sleep)
+            if args.sleep:
+                time.sleep(args.sleep)
+    except:
+        os._exit(1)
+        
 
 
 def generate():
@@ -270,7 +274,6 @@ if __name__ == '__main__':
     if args.flask:
         # start a thread that will perform object detection
         t = threading.Thread(target=detection_loop)
-        t.daemon = True
         t.start()
 
         # start the flask app
