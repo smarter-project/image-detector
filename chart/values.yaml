@@ -1,0 +1,21 @@
+#
+
+application:
+  namespace: smarter
+  appName: smarter-image-detector
+
+image:
+  repository: imtest
+  # @default -- chart.appVersion
+  tag: ""
+  pullPolicy: IfNotPresent
+
+configuration:
+  gstreamer:
+    host: smarter-gstreamer 
+    port: 8554
+  mqtt:
+    host: smarter-fluent-bit
+  admission_controller:
+    host: smarter-admission-controller
+    port: 2520
