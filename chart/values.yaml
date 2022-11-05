@@ -5,8 +5,7 @@ application:
   appName: smarter-image-detector
 
 image:
-  repository: imtest
-  # @default -- chart.appVersion
+  repository: registry.gitlab.com/smarter-project/edge-workloads/image-detector/feature-admission-controller
   tag: ""
   pullPolicy: IfNotPresent
 

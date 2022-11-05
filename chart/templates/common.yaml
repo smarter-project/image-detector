@@ -23,7 +23,7 @@ spec:
         effect: "NoSchedule"
       hostname: {{ .Values.application.appName }}
       initContainers:
-      - name: init-pulse
+      - name: init-gstreamer
         image: busybox:1.28
         command: ['sh', '-c', 'until nslookup {{ .Values.configuration.gstreamer.host }}; do echo waiting for gstreamer; sleep 2; done;']
       containers:
@@ -48,7 +48,7 @@ spec:
         - name: ADMISSION_CONTROLLER_URL
           value: {{ .Values.configuration.admission_controller.host }}:{{ .Values.configuration.admission_controller.port }}
         - name: PROTOCOL
-          value: "gRPC"
+          value: "HTTP"
         ports:
         - containerPort: 8080
           hostPort: 2520
