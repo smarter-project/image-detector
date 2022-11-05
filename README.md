@@ -24,7 +24,7 @@ For demonstration/debugging purposes, the app can be configured to expose a flas
 The following arguments are available to configure the image detector:
 - `-f,--flask` - if set flask app will run at `LISTEN_IP:LISTEN_PORT`
 - `-v,--verbose` - enable verbose output
-- `-i,--ip` or env var `LISTEN_IP` - listen IP address for web server if enabled
+- `-i,--ip` or env var `LISTEN_IP` - listen IP address for web server if enabled. Default is `0.0.0.0`
 - `--port` or env var `LISTEN_PORT` - listen port for web server if enabled
 - `-d,--devno` or env var `DEVNO` - device number for camera (default -1=find first available, 0=internal, 1=external), only used if `CAPTURE_STRING` not set
 - `-n,--capture-string` or env var `CAPTURE_STRING` - any valid VideoCapture string(IP camera connection, RTSP connection string
@@ -34,11 +34,11 @@ The following arguments are available to configure the image detector:
 - `--protocol` or env var `PROTOCOL` - protocol to send requests to triton inference server, default is HTTP, other option is gRPC
 - `-m,--model-name` or env var `MODEL_NAME` - model name in triton to perform inference against, default is `ssd_mobilenet_coco`
 - `-x,--model-version` or env var `MODEL_VERSION` - Version of model to use in triton, default is latest version
-- `-u,--url` or env var `TRITON_URL` - url to access triton, default is localhost:8000
+- `-u,--triton-url` or env var `TRITON_URL` - url to access triton, default is localhost:8000
+- `--admission-controller-url` or env var `ADMISSION_CONTROLLER_URL` - url to access admission controller, default is empty string. If set, triton url will be overwritten with triton within the admission controller
 - `-b,--mqtt-broker-host` or env var `MQTT_BROKER_HOST` - host to access mqtt broker, default to `fluent-bit`
 - `--mqtt-broker-port` or env var `MQTT_BROKER_PORT` - port to access mqtt broker, default to 1883
 - `-t,--mqtt-topic` or env var `MQTT_TOPIC` - mqtt topic to post messages under, default to `/demo`
-- `--ann,--armnn` - if set will use ArmNN version of inference model in triton
 - `--db1,--detect-car`- if set will detect cars
 - `--db2,--detect-person` - if set will detect people
 - `--db3,--detect-bus` - if set will detect buses
