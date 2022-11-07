@@ -5,7 +5,7 @@ application:
   appName: smarter-image-detector
 
 image:
-  repository: registry.gitlab.com/smarter-project/edge-workloads/image-detector/feature-admission-controller
+  repository: ghcr.io/smarter-project/image-detector
   tag: ""
   pullPolicy: IfNotPresent
 
