@@ -2,8 +2,8 @@ apiVersion: v2
 name: smarter-image-detector
 description: smarter-image-detector chart for SMARTER edge devices
 home: https://getsmarter.io
-version: 0.0.2
-appVersion: 2.4.3
+version: 0.0.3
+appVersion: v2.4.3
 kubeVersion: ">=1.16.0-0"
 keywords:
   - kubernetes
