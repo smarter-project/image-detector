@@ -12,4 +12,3 @@ jobs:
     secrets:
       GPG_KEYRING_BASE64: ${{ secrets.GPG_KEYRING_BASE64 }}
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
