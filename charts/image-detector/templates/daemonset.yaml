@@ -26,6 +26,9 @@ spec:
       - name: init-gstreamer
         image: busybox:1.28
         command: ['sh', '-c', 'until nslookup {{ .Values.configuration.gstreamer.host }}; do echo waiting for gstreamer; sleep 2; done;']
+      - name: init-smarter-inference
+        image: busybox:1.28
+        command: ['sh', '-c', 'until nslookup {{ .Values.configuration.smarter_inference.host }}; do echo waiting for smarter-inference; sleep 2; done;']
       containers:
       - name: {{ .Values.application.appName }}
         image: {{ .Values.image.repository }}:{{ default .Chart.AppVersion .Values.image.tag }}
@@ -45,8 +48,8 @@ spec:
           value: "rtspsrc location=rtsp://{{ .Values.configuration.gstreamer.host }}:{{ .Values.configuration.gstreamer.port }}/video.h264.1 ! decodebin ! videoconvert ! appsink max-buffers=1 drop=true"
         - name: MODEL_NAME
           value: "ssd_mobilenet_coco"
-        - name: ADMISSION_CONTROLLER_URL
-          value: {{ .Values.configuration.admission_controller.host }}:{{ .Values.configuration.admission_controller.port }}
+        - name: SMARTER_INFERENCE_URL
+          value: {{ .Values.configuration.smarter_inference.host }}:{{ .Values.configuration.smarter_inference.port }}
         - name: PROTOCOL
           value: "HTTP"
         ports:
