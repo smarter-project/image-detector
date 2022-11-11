@@ -100,11 +100,11 @@ parser.add_argument(
     help="Inference server URL. Default is localhost:8000.",
 )
 parser.add_argument(
-    "--admission-controller-url",
+    "--smarter-inference-url",
     type=str,
     required=False,
-    default=os.getenv("ADMISSION_CONTROLLER_URL", ""),
-    help="Admission Controller URL. Default is localhost:2520.",
+    default=os.getenv("SMARTER_INFERENCE_URL", ""),
+    help="smarter-inferenceler URL. Default is localhost:2520.",
 )
 parser.add_argument(
     "-b",
@@ -399,10 +399,10 @@ if __name__ == "__main__":
 
     classes = read_classes("ssd_mobilenet_coco.classes")
 
-    if args.admission_controller_url:
-        # Use admission control api to upload model then request to load it
+    if args.smarter_inference_url:
+        # Use smarter-inference api to upload model then request to load it
         res = upload_model(
-            args.admission_controller_url,
+            args.smarter_inference_url,
             "tf",
             "ssd_mobilenet_coco",
             "model.graphdef",
@@ -417,7 +417,7 @@ if __name__ == "__main__":
         print("Model upload successful")
 
         res = load_model(
-            args.admission_controller_url,
+            args.smarter_inference_url,
             "ssd_mobilenet_coco",
             "auto_gen",
             "passthrough",
@@ -434,7 +434,7 @@ if __name__ == "__main__":
 
         res_json = res.json()
         endpoint_uuid = res_json["request_uuid"]
-        triton_url = args.admission_controller_url.split(":")[0] + ":" + "2521"
+        triton_url = args.smarter_inference_url.split(":")[0] + ":" + "2521"
         print(res_json["model_config"])
         print("Model load successful")
     else:

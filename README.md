@@ -35,7 +35,7 @@ The following arguments are available to configure the image detector:
 - `-m,--model-name` or env var `MODEL_NAME` - model name in triton to perform inference against, default is `ssd_mobilenet_coco`
 - `-x,--model-version` or env var `MODEL_VERSION` - Version of model to use in triton, default is latest version
 - `-u,--triton-url` or env var `TRITON_URL` - url to access triton, default is localhost:8000
-- `--admission-controller-url` or env var `ADMISSION_CONTROLLER_URL` - url to access admission controller, default is empty string. If set, triton url will be overwritten with triton within the admission controller
+- `--smarter-inference-url` or env var `SMARTER_INFERENCE_URL` - url to access smarter-inference, default is empty string. If set, triton url will be overwritten within smarter-inference inference access point
 - `-b,--mqtt-broker-host` or env var `MQTT_BROKER_HOST` - host to access mqtt broker, default to `fluent-bit`
 - `--mqtt-broker-port` or env var `MQTT_BROKER_PORT` - port to access mqtt broker, default to 1883
 - `-t,--mqtt-topic` or env var `MQTT_TOPIC` - mqtt topic to post messages under, default to `/demo`
