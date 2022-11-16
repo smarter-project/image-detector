@@ -2,7 +2,7 @@ apiVersion: v2
 name: smarter-image-detector
 description: smarter-image-detector chart for SMARTER edge devices
 home: https://getsmarter.io
-version: 0.0.5
+version: 0.0.6
 appVersion: v2.5.3
 kubeVersion: ">=1.16.0-0"
 keywords:
@@ -12,7 +12,7 @@ keywords:
   - image-detector
 sources:
   - https://github.com/smarter-project/image-detector
-icon: https://gitlab.com/uploads/-/system/group/avatar/59012546/ARM1636_Project_Logo_ST2_RGB_V1.png
+icon: https://github.com/smarter-project/documentation/raw/main/ARM1636_Project_Logo_ST2_RGB_V1.png
 annotations:
   artifacthub.io/changes: |
     - Fix template
